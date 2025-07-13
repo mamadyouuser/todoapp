@@ -1,0 +1,10 @@
+name: Flask CI
+
+# این بخش یا خالیه یا حذف شده
+# on:
+#   push:
+#     branches: [ main ]
+
+jobs:
+  build:
+    ...
