@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8" />
+    <title>تودو لیست ساده</title>
+</head>
+<body>
+    <h1>تودو لیست</h1>
+    <input type="text" id="taskInput" placeholder="کار جدید..." />
+    <button onclick="addTask()">اضافه کن</button>
+    <ul id="taskList"></ul>
+
+    <script>
+        const apiUrl = 'http://localhost:5000/tasks';
+
+        async function fetchTasks() {
+            const res = await fetch(apiUrl);
+            const tasks = await res.json();
+            const list = document.getElementById('taskList');
+            list.innerHTML = '';
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.textContent = task.text;
+                const btn = document.createElement('button');
+                btn.textContent = 'حذف';
+                btn.onclick = () => deleteTask(index);
+                li.appendChild(btn);
+                list.appendChild(li);
+            });
+        }
+
+        async function addTask() {
+            const input = document.getElementById('taskInput');
+            const text = input.value.trim();
+            if (!text) return alert('لطفا کاری وارد کنید!');
+            await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text })
+            });
+            input.value = '';
+            fetchTasks();
+        }
+
+        async function deleteTask(index) {
+            await fetch(`${apiUrl}/${index}`, { method: 'DELETE' });
+            fetchTasks();
+        }
+
+        // بارگذاری اولیه لیست
+        fetchTasks();
+    </script>
+</body>
+</html>
