@@ -1,15 +1,18 @@
-version: "3.9"
+version: '3.8'
+
 services:
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: ./backend
     ports:
-      - "5000:5000"
+      - "5001:5001"   # پورت 5001 روی سیستم شما، 5000 داخل کانتینر
+    volumes:
+      - ./backend:/app
+    restart: unless-stopped
 
   frontend:
     image: nginx:alpine
     volumes:
-      - ./index.html:/usr/share/nginx/html/index.html
+      - ./frontend:/usr/share/nginx/html:ro
     ports:
-      - "8080:80"
+      - "8089:80"     # پورت 8081 روی سیستم شما، 80 داخل کانتینر
+    restart: unless-stopped
