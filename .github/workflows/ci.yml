@@ -26,6 +26,8 @@ jobs:
         pip install -r backend/requirements.txt
 
     - name: 🧪 Run tests with pytest
+      env:
+        SECRET_KEY: ${{ secrets.MY_SECRET_KEY }}
       run: |
         cd backend 
         pytest || echo "No tests found, skipping..."
@@ -48,9 +50,8 @@ jobs:
 
     - name: 🐳 Build Docker Image
       run: |
-        docker build -t myapp:latest ./backend
+        docker build --build-arg SECRET_KEY=${{ secrets.MY_SECRET_KEY }} -t myapp:latest ./backend
 
     - name: 🛡 Run Trivy Docker Image Scan
       run: |
         trivy image --exit-code 1 --severity HIGH,CRITICAL myapp:latest
-
