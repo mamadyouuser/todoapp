@@ -45,3 +45,12 @@ jobs:
     - name: 🛡 Run Trivy File System Scan
       run: |
         trivy fs --exit-code 1 --severity HIGH,CRITICAL .
+
+    - name: 🐳 Build Docker Image
+      run: |
+        docker build -t myapp:latest ./backend
+
+    - name: 🛡 Run Trivy Docker Image Scan
+      run: |
+        trivy image --exit-code 1 --severity HIGH,CRITICAL myapp:latest
+
